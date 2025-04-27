@@ -1,0 +1,85 @@
+/* Footer */
+
+footer {
+    background-color: #000;
+    color: white;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+/* Secciones del footer */
+.footer-section {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    text-align: center; /* Centra el contenido de cada sección */
+}
+
+/* Títulos de las secciones */
+.footer-section h3 {
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    font-size: 20px; /* Aumenta el tamaño de los títulos */
+    margin-bottom: 10px;
+}
+
+/* Listas */
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin: 8px 0;
+    font-size: 18px; /* Aumenta el tamaño de las letras en las listas */
+}
+
+.footer-section ul li a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: #007bff;
+}
+
+/* Redes sociales */
+.social-media {
+    display: flex;
+    justify-content: center; /* Centra las redes sociales */
+    gap: 15px; /* Espacio entre los iconos */
+}
+
+.social-media li img {
+    width: 40px; /* Aumenta el tamaño de los iconos */
+    height: 40px;
+    border-radius: 50%; /* Opcional: Redondea las imágenes */
+    transition: transform 0.3s ease;
+}
+
+.social-media li img:hover {
+    transform: scale(1.2); /* Efecto de acercamiento al pasar el mouse */
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    text-align: center;
+    padding-top: 15px;
+    font-size: 16px; /* Tamaño del texto en la parte inferior */
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    footer {
+        text-align: center;
+        flex-direction: column; /* Cambia la orientación a columna */
+    }
+
+    .footer-section {
+        margin-bottom: 20px;
+    }
+}

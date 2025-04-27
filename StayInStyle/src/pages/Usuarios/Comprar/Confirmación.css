@@ -1,0 +1,40 @@
+/* src/pages/Confirmacion.css */
+
+.confirmacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    background-color: #f7f7f7;
+    padding: 2rem;
+}
+
+.mensaje-confirmacion {
+    background-color: white;
+    border-radius: 12px;
+    padding: 3rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+}
+
+.mensaje-confirmacion h1 {
+    color: #27ae60;
+    margin-bottom: 1rem;
+}
+
+.boton-volver {
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.boton-volver:hover {
+    background-color: #219653;
+}

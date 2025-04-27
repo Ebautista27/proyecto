@@ -1,0 +1,317 @@
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+  background-color: #E5E1DA;
+  margin: 0;
+  font-family: 'Trebuchet MS', 'Arial', sans-serif;
+}
+
+/* Header */
+header {
+  background-color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  height: auto; /* Asegura que el header no tenga alturas innecesarias */
+  margin: 0;
+}
+
+.logo {
+  color: white;
+  text-decoration: none;
+  font-size: 35px;
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: #605f5f;
+}
+
+nav ul li ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #333;
+  list-style: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+nav ul li:hover ul {
+  display: block;
+}
+
+nav ul li ul li a {
+  font-size: 16px;
+  padding: 8px 12px;
+  display: block;
+}
+
+/* Search Bar */
+.busqueda {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 20px;
+}
+
+.busqueda input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.busqueda button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.busqueda button:hover {
+  background-color: #0056b3;
+}
+
+/* Product Showcase */
+.vitrina {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.producto {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.producto img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.producto:hover {
+  transform: scale(1.05);
+}
+
+/* Video and Cards Section */
+.video-cards-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.card-container {
+  flex: 0 0 auto;
+  width: 280px;
+  text-align: center;
+}
+
+.image-card {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-card:hover .image-card-img {
+  transform: scale(1.1);
+}
+
+.card-caption {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Carrusel */
+.custom-carousel {
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tendencias Title */
+.tendencias-title {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .video-cards-container {
+      flex-direction: column;
+      gap: 20px;
+  }
+
+  .card-container {
+      width: 100%;
+  }
+
+  .image-card {
+      height: auto;
+  }
+
+  .custom-carousel {
+      height: auto;
+  }
+}
+ 
+/*  ESTILOS HOMBRES Y MUJERES*/
+
+.category-cards-container {
+  display: flex;
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+  gap: 100px; /* Aumenta el espacio entre las tarjetas */
+  margin-top: 50px; /* Añade espacio superior */
+  margin-bottom: 50px; /* Añade espacio inferior */
+}
+
+.card-container {
+  text-align: center; /* Centra el contenido dentro de las cartas */
+}
+
+.image-card {
+  text-decoration: none; /* Elimina subrayados en el texto */
+}
+
+.image-card-img {
+  width: 300px; /* Aumenta el tamaño de las imágenes */
+  height: auto; /* Mantén las proporciones de las imágenes */
+  border-radius: 15px; /* Bordes redondeados */
+  transition: transform 0.3s ease; /* Efecto suave al hacer hover */
+}
+
+.image-card-img:hover {
+  transform: scale(1.1); /* Aumenta el tamaño al pasar el mouse */
+}
+
+.card-caption {
+  margin-top: 15px;
+  font-size: 24px; /* Aumenta el tamaño del texto */
+  font-weight: bold;
+  color: #905151; /* Cambia el color del texto a negro */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.cerrar-sesion-btn {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.cerrar-sesion-btn:hover {
+  background-color: #c9302c;
+}
+
+
+/* Estilos para los enlaces de los productos */
+.producto-link {
+  text-decoration: none; /* Quita el subrayado */
+  color: inherit; /* Hereda el color del texto (en este caso, negro) */
+}
+
+/* Estilos para los títulos de los productos */
+.producto h3 {
+  color: black; /* Color del texto */
+  margin: 10px 0; /* Margen para mejor espaciado */
+  font-size: 24px; /* Aumenta el tamaño de la letra */
+  /* Opcional: Hace el texto más grueso */
+}
+
+/* Estilos para los precios de los productos */
+.producto p {
+  color: black; /* Color del texto */
+  font-size: 20px; /* Aumenta el tamaño de la letra */
+   /* Opcional: Hace el texto más grueso */
+}
+
+/* Estilos para el contenedor del buscador en Home */
+.buscador-container-home {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Ajustes para mantener la responsividad */
+@media (max-width: 768px) {
+  .buscador-container-home {
+    padding: 0 10px;
+  }
+  
+  /* Asegúrate que no interfiera con otros elementos */
+  .vitrina {
+    margin-top: 20px;
+  }
+}

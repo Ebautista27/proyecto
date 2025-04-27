@@ -1,0 +1,205 @@
+/* Ajuste del contenedor principal */
+.container {
+    background-color: #fff;
+    margin: 0;  /* Eliminar márgenes */
+    padding: 20px;  /* Mantener el padding, pero controlado */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho posible */
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding se cuente dentro del ancho del contenedor */
+}
+
+/* Eliminar márgenes innecesarios en el cuerpo */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #E5E1DA; /* Asegura que el fondo sea coherente */
+}
+
+/* Ajustes en el encabezado */
+header {
+    margin: 0; /* Eliminar márgenes */
+}
+
+/* Ajustar la alerta de error */
+.alert {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+    border-radius: 5px;
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+/* Ajustar márgenes y padding de los formularios */
+.form-container {
+    margin: 0; /* Eliminar márgenes adicionales */
+}
+
+/* Ajustes para los botones */
+button {
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+tenedor principal */
+.container {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la página */
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Formulario de Creación de Usuario */
+.form-container {
+    margin-bottom: 40px;
+}
+
+.form-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Contenedor de la tabla de usuarios */
+.table-container {
+    margin-top: 50px;  /* Espacio entre el header y la tabla */
+    padding: 20px;     /* Padding para separar el contenido del borde */
+    background-color: #fff;  /* Fondo blanco */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra sutil para el contenedor */
+}
+
+/* Ajustes en la tabla de usuarios */
+table {
+    width: 100%;
+    margin-top: 20px;  /* Asegura que haya espacio entre el formulario y la tabla */
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+th {
+    background-color: #343a40;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    margin: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+/* Estilos para los botones de acción */
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+/* Hover Effects */
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Mensaje de éxito o error */
+.alert {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+    border-radius: 5px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    table th, table td {
+        font-size: 0.9rem;
+    }
+}

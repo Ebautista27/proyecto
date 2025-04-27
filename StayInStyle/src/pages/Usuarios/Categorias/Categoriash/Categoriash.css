@@ -1,0 +1,99 @@
+/* Asegurar que el body no tenga margen y padding */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #E5E1DA; /* Color de fondo consistente */
+  font-family: 'Trebuchet MS', 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+}
+
+/* Contenedor principal */
+.hombres-container {
+  flex: 1; /* Asegura que este contenedor ocupe todo el espacio disponible */
+  background-color: #E5E1DA;
+  padding: 20px;
+}
+
+/* Footer */
+footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 0; /* Ajustar el padding para eliminar exceso */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  text-align: left;
+  margin-top: auto; /* Empuja el footer hacia la parte inferior */
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+}
+
+.footer-section h3 {
+  border-bottom: 2px solid #fff;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 5px 0;
+}
+
+.footer-section ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #007bff;
+}
+
+.social-media {
+  display: flex;
+  gap: 10px;
+}
+
+.social-media li {
+  list-style: none;
+}
+
+.social-media li a img {
+  width: 35px;
+  height: 35px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Estilos para el contenedor del buscador en Home */
+.buscador-container-home {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Ajustes para mantener la responsividad */
+@media (max-width: 768px) {
+  .buscador-container-home {
+    padding: 0 10px;
+  }
+  
+  /* Asegúrate que no interfiera con otros elementos */
+  .vitrina {
+    margin-top: 20px;
+  }
+}

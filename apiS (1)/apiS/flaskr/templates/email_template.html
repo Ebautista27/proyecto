@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stay In Style | Notificación</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #1e002e, #000000);
+      color: #ffffff;
+      font-family: 'Press Start 2P', cursive;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .pantalla {
+      background: repeating-linear-gradient(
+        45deg,
+        #0f0f0f,
+        #0f0f0f 10px,
+        #2b002e 10px,
+        #2b002e 20px
+      );
+      border: 6px double #ff69b4;
+      padding: 50px 30px;
+      border-radius: 30px;
+      box-shadow: 
+        0 0 25px #ff69b4, 
+        0 0 45px #ffe6f2,
+        inset 0 0 20px #ffccff;
+      text-align: center;
+      width: 90%;
+      max-width: 720px;
+      animation: pixelFade 1s ease-in-out both;
+      position: relative;
+    }
+
+    .pantalla::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      right: -15px;
+      bottom: -15px;
+      border: 3px dashed #ff69b4;
+      border-radius: 40px;
+      z-index: -1;
+      animation: softPulse 3s ease-in-out infinite alternate;
+    }
+
+    .titulo {
+      color: #ffccff;
+      text-shadow: 2px 2px #ff69b4;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .contenido {
+      color: #f8f8f8;
+      font-size: 12px;
+      line-height: 1.8;
+      padding: 0 15px;
+    }
+
+    a.boton {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 14px 30px;
+      font-size: 12px;
+      background: #ff69b4;
+      color: #000000;
+      text-decoration: none;
+      border: 2px solid #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff69b4;
+      transition: all 0.3s ease;
+    }
+
+    a.boton:hover {
+      background: #ffffff;
+      color: #ff69b4;
+      box-shadow: 0 0 25px #ffccff;
+      transform: scale(1.1);
+    }
+
+    @keyframes pixelFade {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes softPulse {
+      0% {
+        box-shadow: 0 0 10px #ff69b4;
+      }
+      100% {
+        box-shadow: 0 0 25px #ffe6f2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="pantalla">
+    <div class="titulo">STAY IN STYLE TE LLAMA 💫</div>
+    <div class="contenido">
+      {{ contenido|safe }}
+    </div>
+  </div>
+</body>
+</html>

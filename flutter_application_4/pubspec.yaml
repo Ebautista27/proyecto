@@ -1,0 +1,44 @@
+name: flutter_application_4
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.7.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Dependencias principales
+  cupertino_icons: ^1.0.8
+  http: ^0.13.4
+  shared_preferences: ^2.2.0
+  intl: ^0.18.1
+
+  # Dependencias para el Home
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.3.0
+  video_player: ^2.7.0
+  flutter_rating_stars: ^1.1.0
+
+  # Para manejo de imágenes
+  image_picker: ^1.0.4
+
+  # Dependencias NUEVAS para DetalleProducto
+  flutter_rating_bar: ^4.0.1
+  photo_view: ^0.14.0  # Para zoom de imágenes
+  # Eliminamos sweetalert y usaremos diálogos nativos
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/imagenes/
+    - assets/videos/

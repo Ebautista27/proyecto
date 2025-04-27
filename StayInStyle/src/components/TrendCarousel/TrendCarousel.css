@@ -1,0 +1,54 @@
+/* Estilos para el TrendCarousel */
+.carousel-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; /* Ajustamos la altura del carrusel */
+  }
+  
+  .carousel-item img {
+    width: 100%; /* Aseguramos que las imágenes ocupen todo el ancho */
+    height: auto; /* Mantiene la proporción original de las imágenes */
+    object-fit: cover; /* Hace que la imagen se recorte para cubrir todo el área del contenedor sin distorsión */
+    border-radius: 8px;
+  }
+  
+  .carousel-item {
+    text-align: center;
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: black; /* Estilo para los botones */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .carousel-control-prev-icon::after,
+  .carousel-control-next-icon::after {
+    color: white;
+    font-size: 30px;
+  }
+  
+  .carousel-control-prev-icon::after {
+    content: '\2039'; /* Flecha izquierda */
+  }
+  
+  .carousel-control-next-icon::after {
+    content: '\203A'; /* Flecha derecha */
+  }
+  
+
+
+  .carousel {
+    height: 500px; /* Ajusta esto según lo que necesites */
+    overflow: hidden;
+  }
+  
+  .carousel-item img {
+    height: 100%;
+    width: auto;
+    object-fit: cover; /* Recorta las imágenes para mantener una proporción uniforme */
+  }
+  

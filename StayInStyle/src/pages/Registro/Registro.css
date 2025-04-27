@@ -1,0 +1,75 @@
+/* Estilo general */
+body {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background-color: #e5e1da;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Contenedor del formulario */
+.registro-container {
+    max-width: 500px; /* Hacer el contenedor más ancho */
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+.registro-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Etiquetas */
+.registro-container label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 16px; /* Tamaño más grande */
+    color: #333; /* Color similar al anterior */
+}
+
+/* Inputs */
+.registro-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Botón */
+.registro-container button {
+    width: 100%;
+    background-color: #333; /* Color base */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.registro-container button:hover {
+    background-color: #B17457; /* Hover solicitado */
+}
+
+/* Link de registro */
+.link_registro {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.link_registro a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.link_registro a:hover {
+    color: #B17457;
+}

@@ -1,0 +1,125 @@
+/* Header */
+header {
+  background-color: #000000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px; /* Ajusta los paddings */
+  text-align: center;
+  margin-bottom: 20px; /* Añade margen inferior para separar el header del contenido */
+}
+
+/* Logo Container */
+/* Logo Container */
+.logo-container {
+  display: flex;
+  align-items: center; /* Asegura la alineación vertical */
+}
+
+/* Logo Link */
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Elimina el subrayado */
+  color: inherit; /* Mantiene el color original */
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Logo Image */
+.logo-image {
+  width: 74px; /* Tamaño de la imagen */
+  height: 74px; /* Altura igual para mantener proporciones */
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Logo Text */
+.logo-text {
+  font-size: 40px; /* Ajusta el tamaño según tus preferencias */
+  font-weight: bold;
+  color: white;
+  margin-left: 15px; /* Espaciado entre la imagen y el texto */
+  transition: transform 0.3s ease, color 0.3s ease;
+  margin-top: -10px;
+}
+
+/* Hover Effect */
+.logo-link:hover .logo-image,
+.logo-link:hover .logo-text {
+  transform: scale(1.1); /* Efecto de acercamiento */
+  color: #E5E1DA; /* Cambia el texto al color café */
+}
+
+
+/* Navigation Menu */
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px; /* Aumenta el espacio entre los enlaces */
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacio entre el icono y el texto */
+  padding: 10px 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+nav ul li a i {
+  font-size: 28px; /* Aumenta el tamaño de los íconos */
+}
+
+nav ul li a:hover {
+  background-color: #605f5f;
+  border-radius: 5px;
+}
+
+/* Dropdown Menu */
+nav ul li ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style: none;
+  padding: 15px;
+  margin: 0;
+  background-color: #333;
+  border-radius: 5px;
+}
+
+nav ul li:hover ul {
+  display: block;
+}
+
+nav ul li ul li a {
+  font-size: 20px;
+  padding: 10px 15px;
+  display: block;
+}
+
+.cerrar-sesion-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cerrar-sesion-btn:hover {
+  color: red;
+}

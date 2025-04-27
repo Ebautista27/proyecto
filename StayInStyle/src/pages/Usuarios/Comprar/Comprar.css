@@ -1,0 +1,173 @@
+/* Reset básico para eliminar márgenes predeterminados */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #E5E1DA; /* Color de fondo que deseas */
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal que ocupa toda la altura */
+.page-container {
+    background-color: #E5E1DA;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor del formulario (mantiene tus estilos originales con ajustes) */
+.comprar-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto; /* Reduje el margen superior/inferior */
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; /* Asegura que ocupe el espacio disponible */
+}
+
+.comprar-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.formulario-compra {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.seccion-formulario {
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: white; /* Fondo blanco para las secciones */
+}
+
+.seccion-formulario h2 {
+    margin-top: 0;
+    color: #444;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.campo-formulario {
+    margin-bottom: 20px;
+}
+
+.campo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.campo-formulario input,
+.campo-formulario textarea,
+.campo-formulario select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.campo-formulario textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.input-telefono {
+    display: flex;
+    align-items: center;
+}
+
+.codigo-pais {
+    background: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.input-telefono input {
+    border-radius: 0 4px 4px 0 !important;
+}
+
+.metodos-pago {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.opcion-pago {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.opcion-pago:hover {
+    border-color: #ddd;
+    background: #f9f9f9;
+}
+
+.opcion-pago input[type="radio"] {
+    width: auto;
+}
+
+.boton-confirmar {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.boton-confirmar:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+/* Estilos para mensajes */
+.error-message {
+    color: #d32f2f;
+    background-color: #fde0e0;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+}
+
+.success-message {
+    color: #388e3c;
+    background-color: #e8f5e9;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 15px;
+    }
+    
+    .comprar-container {
+        margin: 0 auto; /* Elimina márgenes laterales en móvil */
+        padding: 15px;
+    }
+}

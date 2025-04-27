@@ -1,0 +1,35 @@
+.about-container {
+    background-color: #ffffff; /* Fondo más claro para contraste */
+    margin: 40px auto; /* Más margen para separar del resto del contenido */
+    padding: 30px; /* Más espacio interno */
+    border-radius: 15px; /* Bordes más suaves */
+    max-width: 900px; /* Un poco más ancho */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+    border: 1px solid #e6e6e6; /* Borde claro para mayor definición */
+  }
+  
+  .about-title {
+    font-size: 32px; /* Aumentar tamaño del título */
+    font-weight: 700; /* Más grosor para destacar */
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50; /* Color más profesional */
+    text-transform: uppercase; /* Hacer el título en mayúsculas */
+    letter-spacing: 1.5px; /* Espaciado entre letras */
+  }
+  
+  .about-text {
+    font-size: 18px;
+    line-height: 1.8; /* Más espacio entre líneas para legibilidad */
+    color: #606060; /* Color más suave para texto */
+    text-align: justify;
+    word-spacing: 1.2px; /* Espaciado entre palabras */
+  }
+  
+  /* Efecto hover para el contenedor */
+  .about-container:hover {
+    transform: scale(1.02); /* Suave zoom al pasar el mouse */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25); /* Sombra más pronunciada */
+  }
+  
