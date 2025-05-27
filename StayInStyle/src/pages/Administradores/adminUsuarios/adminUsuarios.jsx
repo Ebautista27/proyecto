@@ -5,6 +5,7 @@ import "./adminUsuarios.css";
 
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -15,55 +16,68 @@ const AdminUsuarios = () => {
   });
   const [editData, setEditData] = useState(null);
   const [mensaje, setMensaje] = useState("");
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // Inicializar AOS y cargar usuarios al montar el componente
+  // Inicializar AOS y cargar datos al montar el componente
   useEffect(() => {
     AOS.init();
+    fetchRoles();
     fetchUsuarios();
   }, []);
 
-  // Obtener la lista de usuarios desde el backend
-  const fetchUsuarios = async () => {
+  // Obtener la lista de roles desde el backend
+  const fetchRoles = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/usuarios", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch("http://127.0.0.1:5000/roles", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       if (response.ok) {
-        setUsuarios(data); // Guardar los usuarios en el estado
+        setRoles(data.roles);
+      } else {
+        setMensaje(data.mensaje || "Error al cargar los roles.");
+      }
+    } catch (error) {
+      setMensaje("Error al cargar los roles.");
+      console.error("Error fetching roles:", error);
+    }
+  };
+
+  // Obtener la lista de usuarios desde el backend
+  const fetchUsuarios = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://127.0.0.1:5000/usuarios", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setUsuarios(data.usuarios || data); // Adaptación para ambas estructuras
       } else {
         setMensaje(data.mensaje || "Error al cargar los usuarios.");
       }
     } catch (error) {
       setMensaje("Error al cargar los usuarios.");
       console.error("Error fetching usuarios:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Validar que el id_rol solo acepte 1 o 2
-    if (name === "id_rol" && value !== "" && !["1", "2"].includes(value)) {
-      setMensaje("El rol debe ser 1 (Usuario) o 2 (Administrador).");
-      return;
-    }
-
-    setMensaje("");
     setFormData({ ...formData, [name]: value });
+    setMensaje("");
   };
 
   // Manejar el envío del formulario (crear o actualizar usuario)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar que el id_rol sea 1 o 2 antes de enviar
-    if (!["1", "2"].includes(formData.id_rol)) {
-      setMensaje("Por favor, ingrese un rol válido: 1 (Usuario) o 2 (Administrador).");
+    if (!formData.id_rol) {
+      setMensaje("Por favor, seleccione un rol.");
       return;
     }
 
@@ -81,30 +95,35 @@ const AdminUsuarios = () => {
         },
         body: JSON.stringify({
           ...formData,
-          id_rol: parseInt(formData.id_rol), // Convertir a número antes de enviar
+          id_rol: parseInt(formData.id_rol),
         }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        setMensaje(editData ? "Usuario actualizado" : "Usuario creado");
-        fetchUsuarios(); // Recargar la lista de usuarios
-        setFormData({
-          nombre: "",
-          email: "",
-          contrasena: "",
-          id_rol: "",
-          num_cel: "",
-          direccion: "",
-        });
-        setEditData(null);
+        setMensaje(editData ? "Usuario actualizado correctamente" : "Usuario creado exitosamente");
+        fetchUsuarios();
+        resetForm();
       } else {
-        setMensaje(data.mensaje || "Error al guardar el usuario.");
+        setMensaje(data.mensaje || "Error al procesar la solicitud.");
       }
     } catch (error) {
-      setMensaje("Error al guardar el usuario.");
+      setMensaje("Error de conexión con el servidor.");
       console.error("Error saving usuario:", error);
     }
+  };
+
+  // Resetear formulario
+  const resetForm = () => {
+    setFormData({
+      nombre: "",
+      email: "",
+      contrasena: "",
+      id_rol: "",
+      num_cel: "",
+      direccion: "",
+    });
+    setEditData(null);
   };
 
   // Manejar la edición de un usuario
@@ -115,24 +134,26 @@ const AdminUsuarios = () => {
       email: usuario.email,
       contrasena: "",
       id_rol: usuario.id_rol.toString(),
-      num_cel: usuario.num_cel,
-      direccion: usuario.direccion,
+      num_cel: usuario.num_cel || "",
+      direccion: usuario.direccion || "",
     });
   };
 
   // Manejar la eliminación de un usuario
   const handleDelete = async (id) => {
+    if (!window.confirm("¿Está seguro que desea eliminar este usuario?")) {
+      return;
+    }
+
     try {
       const response = await fetch(`http://127.0.0.1:5000/usuarios/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.ok) {
-        setMensaje("Usuario eliminado");
-        fetchUsuarios(); // Recargar la lista de usuarios
+        setMensaje("Usuario eliminado correctamente");
+        fetchUsuarios();
       } else {
         const data = await response.json();
         setMensaje(data.mensaje || "Error al eliminar el usuario.");
@@ -142,6 +163,20 @@ const AdminUsuarios = () => {
       console.error("Error deleting usuario:", error);
     }
   };
+
+  // Obtener nombre del rol
+  const getRolNombre = (id_rol) => {
+    const rol = roles.find(r => r.id === Number(id_rol));
+    return rol ? rol.nombre : "Rol no encontrado";
+  };
+
+  if (loading) {
+    return (
+      <div style={{ backgroundColor: "#E5E1DA", minHeight: "100vh", padding: "20px" }}>
+        <div className="container">Cargando usuarios...</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: "#E5E1DA", minHeight: "100vh", padding: "20px" }}>
@@ -175,16 +210,21 @@ const AdminUsuarios = () => {
               placeholder="Contraseña"
               value={formData.contrasena}
               onChange={handleChange}
-              required={!editData} // Solo requerido al crear
+              required={!editData}
             />
-            <input
-              type="text"
+            <select
               name="id_rol"
-              placeholder="Rol (1: Usuario, 2: Administrador)"
               value={formData.id_rol}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="">Seleccione un rol</option>
+              {roles.map(rol => (
+                <option key={rol.id} value={rol.id}>
+                  {rol.nombre}
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               name="num_cel"
@@ -202,6 +242,11 @@ const AdminUsuarios = () => {
             <button type="submit">
               {editData ? "Actualizar Usuario" : "Crear Usuario"}
             </button>
+            {editData && (
+              <button type="button" onClick={resetForm} style={{ marginLeft: '10px' }}>
+                Cancelar
+              </button>
+            )}
           </form>
         </div>
 
@@ -219,13 +264,13 @@ const AdminUsuarios = () => {
               </tr>
             </thead>
             <tbody>
-              {usuarios.map((usuario) => (
+              {usuarios.map(usuario => (
                 <tr key={usuario.id}>
                   <td>{usuario.nombre}</td>
                   <td>{usuario.email}</td>
-                  <td>{usuario.num_cel}</td>
-                  <td>{usuario.direccion}</td>
-                  <td>{usuario.id_rol === 1 ? "Usuario" : "Administrador"}</td>
+                  <td>{usuario.num_cel || "-"}</td>
+                  <td>{usuario.direccion || "-"}</td>
+                  <td>{getRolNombre(usuario.id_rol)}</td>
                   <td>
                     <button onClick={() => handleEdit(usuario)}>Editar</button>
                     <button onClick={() => handleDelete(usuario.id)}>Eliminar</button>
