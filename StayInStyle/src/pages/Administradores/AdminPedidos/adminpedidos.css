@@ -1,205 +1,255 @@
-/* Ajuste del contenedor principal */
-.container {
-    background-color: #fff;
-    margin: 0;  /* Eliminar márgenes */
-    padding: 20px;  /* Mantener el padding, pero controlado */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho posible */
-    width: 100%;
-    box-sizing: border-box; /* Asegura que el padding se cuente dentro del ancho del contenedor */
-}
-
-/* Eliminar márgenes innecesarios en el cuerpo */
+/* Estilos generales */
 body {
     margin: 0;
     padding: 0;
-    background-color: #E5E1DA; /* Asegura que el fondo sea coherente */
-}
-
-/* Ajustes en el encabezado */
-header {
-    margin: 0; /* Eliminar márgenes */
-}
-
-/* Ajustar la alerta de error */
-.alert {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-    border-radius: 5px;
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
-}
-
-/* Ajustar márgenes y padding de los formularios */
-.form-container {
-    margin: 0; /* Eliminar márgenes adicionales */
-}
-
-/* Ajustes para los botones */
-button {
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 8px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-tenedor principal */
-.container {
-    margin-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  .admin-compras-container {
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Título de la página */
-h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 30px;
-}
-
-/* Formulario de Creación de Usuario */
-.form-container {
-    margin-bottom: 40px;
-}
-
-.form-container h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.form-group {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1, h2 {
+    color: #2c3e50;
     margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 8px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    box-sizing: border-box;
-}
-
-button[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Contenedor de la tabla de usuarios */
-.table-container {
-    margin-top: 50px;  /* Espacio entre el header y la tabla */
-    padding: 20px;     /* Padding para separar el contenido del borde */
-    background-color: #fff;  /* Fondo blanco */
-    border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Sombra sutil para el contenedor */
-}
-
-/* Ajustes en la tabla de usuarios */
-table {
-    width: 100%;
-    margin-top: 20px;  /* Asegura que haya espacio entre el formulario y la tabla */
-    border-collapse: collapse;
-}
-
-table th, table td {
-    padding: 12px;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
     text-align: center;
-    font-size: 1rem;
-}
-
-th {
-    background-color: #343a40;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-button {
-    margin: 5px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-
-/* Estilos para los botones de acción */
-.btn-warning {
-    background-color: #ffc107;
-    border: none;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border: none;
-}
-
-/* Hover Effects */
-.btn-warning:hover {
-    background-color: #e0a800;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Mensaje de éxito o error */
-.alert {
-    margin-top: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  /* Alertas */
+  .alert {
     padding: 15px;
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-    border-radius: 5px;
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  /* Formularios */
+  .form-container {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+  }
+  
+  /* Tabla */
+  .table-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+  }
+  
+  .table-style {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table-style th,
+  .table-style td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .table-style th {
+    background-color: #2c3e50;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .table-style tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Badges de estado */
+  .status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .status-procesado {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  .status-enviado {
+    background-color: #cce5ff;
+    color: #004085;
+  }
+  
+  .status-entregado {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .status-cancelado {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  /* Botones */
+  button {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .btn-primary {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #7f8c8d;
+    transform: translateY(-1px);
+  }
+  
+  .btn-edit {
+    background-color: #f39c12;
+    color: white;
+    margin-right: 5px;
+  }
+  
+  .btn-edit:hover {
+    background-color: #e67e22;
+  }
+  
+  .btn-delete {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .btn-delete:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Estados de carga y error */
+  .loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+  }
+  
+  .error {
+    text-align: center;
+    padding: 30px;
+    color: #e74c3c;
+    background-color: #fadbd8;
+    border-radius: 6px;
+    margin: 20px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
     .container {
-        padding: 15px;
+      padding: 15px;
     }
-
-    h1 {
-        font-size: 2rem;
+    
+    .form-container {
+      padding: 20px;
     }
-
-    table th, table td {
-        font-size: 0.9rem;
+    
+    .table-style {
+      display: block;
+      overflow-x: auto;
     }
-}
+    
+    .form-actions {
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    button {
+      width: 100%;
+    }
+  }
