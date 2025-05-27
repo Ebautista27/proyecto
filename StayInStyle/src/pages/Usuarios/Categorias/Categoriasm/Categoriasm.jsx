@@ -1,97 +1,100 @@
-import React from "react";
-import { Link } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import BuscadorProductos from "../../../../components/Buscador/BuscadorProductos";
-
-import "./Categoriasm.css"; // Usamos el mismo CSS de Hombres
+import "./Categoriasm.css";
 
 const Categoriasm = () => {
-  const productos = [
-    {
-      id: 9,
-      nombre: "Camisa Overzice 97",
-      precio: "75.000 mil pesos",
-      imagen: "/public/productos/Camisa_M_1.jpg",
-      enlace: "/Productos/detalle_producto_camisa_arena97",
-    },
-    {
-      id: 10,
-      nombre: "Camisa Colmillos",
-      precio: "80.000 mil pesos",
-      imagen: "/public/productos/Camisa_M_2.jpg",
-      enlace: "/Productos/detalle_producto_camisa_gris-negra",
-    },
-    {
-      id: 11,
-      nombre: "Camisa SideStreet",
-      precio: "90.000 mil pesos",
-      imagen: "/public/productos/Camisa_M_3.jpg",
-      enlace: "/Productos/detalle_producto_camisa_negra_sidesteet",
-    },
-    {
-      id: 12,
-      nombre: "Camisa Saint Tears",
-      precio: "95.000 mil pesos",
-      imagen: "/public/productos/Camisa_M_4.jpg",
-      enlace: "/Productos/detalle_producto_camisa_negra_saint-tears",
-    },
-    {
-      id: 13,
-      nombre: "Pantalón Anything",
-      precio: "78.000 mil pesos",
-      imagen: "/public/productos/pantalon_M_1.jpeg",
-      enlace: "/Productos/detalle_producto_pantalonM_anything",
-    },
-    {
-      id: 14,
-      nombre: "Cargo Morado",
-      precio: "100.000 mil pesos",
-      imagen: "/public/productos/Pantalon_M_3.jpg",
-      enlace: "/Productos/detalle_producto_pantalonM_Cargo_Morado",
-    },
-    {
-      id: 15,
-      nombre: "Shorts Cargo",
-      precio: "60.000 mil pesos",
-      imagen: "/public/productos/Pantalon_M_4.jpg",
-      enlace: "/Productos/detalle_producto_pantalonetaM_Cargo",
-    },
-    {
-      id: 16,
-      nombre: "Jeans Atractivos",
-      precio: "90.000 mil pesos",
-      imagen: "/public/productos/Pantalon_M_5.jpg",
-      enlace: "/Productos/detalle_producto_pantalonM_Desteñido_llamas-Moradas",
-    },
-  ];
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Función para verificar disponibilidad simplificada
+  const verificarDisponibilidad = (producto) => {
+    return producto.estado !== "Agotado" && producto.estado !== "No disponible";
+  };
+
+  useEffect(() => {
+    const cargarProductos = async () => {
+      try {
+        // Obtenemos todos los productos
+        const response = await axios.get('http://127.0.0.1:5000/productos');
+        
+        // Filtramos y mapeamos los productos para mujeres (id_genero = 2)
+        const productosMujeres = response.data
+          .filter(producto => producto.id_genero === 2)
+          .map(producto => ({
+            ...producto,
+            imagen_url: producto.imagen_url || 'https://via.placeholder.com/300?text=Imagen+no+disponible',
+            disponible: verificarDisponibilidad(producto)
+          }));
+        
+        setProductos(productosMujeres);
+      } catch (err) {
+        console.error("Error al obtener productos:", err);
+        setError("Error al cargar los productos. Intenta recargar la página.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarProductos();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Cargando productos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Recargar página</button>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ backgroundColor: "#E5E1DA" }}>
-      <div className="mujeres-container">
-         {/* >>>>>>>>> REEMPLAZA TU BARRA DE BÚSQUEDA ACTUAL POR ESTO <<<<<<<<< */}
-       <div className="buscador-container-home">
+    <div className="mujeres-container">
+      <div className="buscador-container-home">
         <BuscadorProductos />
       </div>
-        <h2>Prendas destacadas</h2>
+      <h2>Prendas para Mujeres</h2>
+      {productos.length === 0 ? (
+        <p className="no-products">No hay productos disponibles en esta categoría</p>
+      ) : (
         <section className="vitrina">
           {productos.map((producto) => (
             <div className="producto" key={producto.id}>
-              <Link to={producto.enlace}>
-                <img src={producto.imagen} alt={producto.nombre} />
+              <Link to={`/productos/${producto.id}`}>
+                <img 
+                  src={producto.imagen_url} 
+                  alt={producto.nombre}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/300?text=Imagen+no+disponible';
+                    console.error('Error cargando imagen:', producto.imagen_url);
+                  }}
+                  loading="lazy"
+                />
               </Link>
-              <h3>{producto.nombre}</h3>
-              <p>Precio: {producto.precio}</p>
+              <div className="producto-info">
+                <h3>{producto.nombre}</h3>
+                <p>${producto.precio.toLocaleString('es-CO')} COP</p>
+                <span className={`estado ${producto.disponible ? 'disponible' : 'agotado'}`}>
+                  {producto.disponible ? 'Disponible' : 'Agotado'}
+                </span>
+              </div>
             </div>
           ))}
         </section>
-      </div>
+      )}
     </div>
   );
 };
 
 export default Categoriasm;
-
- 
-
-
-
-

@@ -23,116 +23,131 @@ const IniciarSesion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+   
     if (!email || !password) {
       setMensaje("Por favor completa todos los campos");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const response = await axios.post("http://127.0.0.1:5000/login", {
         email,
         password,
       });
-  
+
       const { token, usuario } = response.data;
-  
+
       // Guardar todo en localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("id_usuario", usuario.id);
       localStorage.setItem("nombre_usuario", usuario.nombre);
       localStorage.setItem("email_usuario", usuario.email);
       localStorage.setItem("direccion_usuario", usuario.direccion);
-  
-      // Mensaje y navegación
-      if (email === "superadmin@example.com" && password === "superadmin123") {
-        setMensaje("¡Inicio de sesión exitoso como administrador!");
-        navigate("/Administrador");
-      } else {
-        setMensaje("¡Inicio de sesión exitoso!");
-        navigate("/");
+      localStorage.setItem("userRole", usuario.id_rol);
+
+      // Verificar si es superadmin
+      const isSuperAdmin = email === "superadmin@example.com" && password === "superadmin123";
+      if (isSuperAdmin) {
+        localStorage.setItem("isSuperAdmin", "true");
       }
-  
+
+      // Mostrar mensaje de éxito
+      if (isSuperAdmin) {
+        setMensaje("¡Inicio de sesión exitoso como SuperAdmin! Redirigiendo...");
+      } else if (usuario.id_rol === 1) {
+        setMensaje("¡Inicio de sesión exitoso como administrador! Redirigiendo...");
+      } else {
+        setMensaje("¡Inicio de sesión exitoso! Redirigiendo...");
+      }
+
+      // Redirección después de 1.5 segundos
+      setTimeout(() => {
+        if (usuario.id_rol === 1 || isSuperAdmin) {
+          navigate("/Administrador");
+        } else {
+          navigate("/");
+        }
+        window.location.reload();
+      }, 1500);
+
     } catch (error) {
       setMensaje(
-        error.response?.data?.mensaje || 
+        error.response?.data?.mensaje ||
         "Error al iniciar sesión. Verifica tus credenciales."
       );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div style={{ backgroundColor: "#E5E1DA", minHeight: "100vh", padding: "20px" }}>
-    <div className="auth-page-container">
-      <div className="auth-container">
-        <h2>Inicia Sesión</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="email">Correo Electrónico</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-              placeholder="Ingresa tu correo"
-              required
-            />
-          </div>
+      <div className="auth-page-container">
+        <div className="auth-container">
+          <h2>Inicia Sesión</h2>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="email">Correo Electrónico</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+                placeholder="Ingresa tu correo"
+                required
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-              placeholder="Ingresa tu contraseña"
-              required
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="password">Contraseña</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+            </div>
 
-            {/* Mostrar Contraseña */}
             <div className="show-password">
-            <input
-              type="checkbox"
-              id="showPassword"
-              onChange={togglePasswordVisibility}
-            />
-            <label htmlFor="showPassword">Mostrar contraseña</label>
+              <input
+                type="checkbox"
+                id="showPassword"
+                onChange={togglePasswordVisibility}
+              />
+              <label htmlFor="showPassword">Mostrar contraseña</label>
+            </div>
+
+            <button
+              type="submit"
+              className="auth-button"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner"></span> Iniciando sesión...
+                </>
+              ) : "Iniciar Sesión"}
+            </button>
+          </form>
+
+          {mensaje && (
+            <div className={`auth-message ${mensaje.includes("éxito") ? "success" : "error"}`}>
+              {mensaje}
+            </div>
+          )}
+
+          <div className="auth-links">
+            <a href="/ForgotPassword">¿Olvidaste tu contraseña?</a>
+            <p>¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
           </div>
-
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className="spinner"></span> Iniciando sesión...
-              </>
-            ) : "Iniciar Sesión"}
-          </button>
-        </form>
-
-        {mensaje && (
-          <div className={`auth-message ${mensaje.includes("éxito") ? "success" : ""}`}>
-            {mensaje}
-          </div>
-        )}
-
-        <div className="auth-links">
-          <a href="/ForgotPassword">¿Olvidaste tu contraseña?</a>
-          <p>¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
         </div>
       </div>
-    </div>
     </div>
   );
 };

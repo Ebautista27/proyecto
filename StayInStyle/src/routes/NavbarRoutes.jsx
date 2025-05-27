@@ -19,34 +19,22 @@ import ForgotPassword from '../components/Auth/ForgotPassword';
 import ResetPasswordPage from '../components/Auth/ResetPasswordPage';
 
 
-// Importar los archivos de detalle de productos
-import DetalleProducto1 from "../pages/Productos/detalle_producto1";
-import DetalleProducto2 from "../pages/Productos/detalle_producto2";
-import DetalleProducto3 from "../pages/Productos/detalle_producto3";
-import DetalleProducto4 from "../pages/Productos/detalle_producto4";
-import DetalleProducto5 from "../pages/Productos/detalle_producto_camisa_blanca_overzice";
-import DetalleProducto6 from "../pages/Productos/detalle_producto_camisa_negra_araña";
-import DetalleProducto7 from "../pages/Productos/detalle_producto_camisa_blanca_llamas";
-import DetalleProducto8 from "../pages/Productos/detalle_producto_camisa_negra_clasica";
-import DetalleProducto9 from "../pages/Productos/detalle_producto_camisa_gris_AW_SPIKY_HEAD";
-import DetalleProducto10 from "../pages/Productos/detalle_producto_camisa_blanca-gris_xomoclothes";
-import DetalleProducto11 from "../pages/Productos/detalle_producto_camisa_negra-blanco_blackstar";
-import DetalleProducto12 from "../pages/Productos/detalle_producto_camisa_negra_eterning";
-import DetalleProducto13 from "../pages/Productos/detalle_producto_camisa_arena97";
-import AdminReseñas from '../pages/Administradores/AdminReseñas/AdminReseñas';
-import DetalleProducto14 from "../pages/Productos/detalle_producto_camisa_gris-negra";
-import DetalleProducto15 from "../pages/Productos/detalle_producto_camisa_negra_sidesteet";
-import DetalleProducto16 from "../pages/Productos/detalle_producto_camisa_negra_saint-tears";
-import DetalleProducto17 from "../pages/Productos/detalle_producto_pantalonM_anything";
-import DetalleProducto18 from "../pages/Productos/detalle_producto_pantalonM_Cargo_Morado";
-import DetalleProducto19 from "../pages/Productos/detalle_producto_pantalonetaM_Cargo";
-import DetalleProducto20 from "../pages/Productos/detalle_producto_pantalonM_Desteñido_llamas-Moradas";
-import DetalleProducto21 from "../pages/Productos/dealle_producto_destacado_chaqueta_azul";
-import DetalleProducto22 from "../pages/Productos/detalle_producto_destacado_camiseta_azul";
-import DetalleProducto23 from "../pages/Productos/detalle_producto_destacado_chaqueta_negra";
+
+import DetalleProducto from "../pages/Productos/DetalleProducto";
 
 // Importar los archivos de compra
 import Confirmacion from "../pages/Usuarios/Comprar/Confirmación";
+
+// Importación (asumiendo export default)
+import AdminReseñas from "../pages/Administradores/AdminReseñas/AdminReseñas";
+
+import AdminStock from "../pages/Administradores/AdminStock/Adminstock"
+
+import HistorialCompras from "../pages/Usuarios/Comprar/HistorialCompras"
+
+
+
+import Pedido from "../pages/Usuarios/Comprar/Pedido"
 
 
 
@@ -64,39 +52,27 @@ const NavbarRoutes = () => {
       <Route path="/Administradores/adminUsuarios" element={<AdminUsuarios />} />
       <Route path="/Administradores/adminproductos" element={<AdminProductos />} />
       <Route path="/Administradores/AdminPedidos" element={<AdminPedidos />} />
-      <Route path="/Administradores/AdminReseñas" element={<AdminReseñas />} />
+
       <Route path="/Usuarios/sobre_nosotros/QueEsStayInStyle" element={<QueEsStayInStyle />} />
+
+      <Route path="/Administradores/AdminReseñas" element={<AdminReseñas />} />
+
       <Route path="/Usuarios/sobre_nosotros/QuienesSomos" element={<QuienesSomos />} />
 
-      {/* Rutas dinámicas para cada detalle de producto */}
-      <Route path="/Productos/detalle_producto1" element={<DetalleProducto1 />} />
-      <Route path="/Productos/detalle_producto2" element={<DetalleProducto2 />} />
-      <Route path="/Productos/detalle_producto3" element={<DetalleProducto3 />} />
-      <Route path="/Productos/detalle_producto4" element={<DetalleProducto4 />} />
-      <Route path="/Productos/detalle_producto_camisa_blanca_overzice" element={<DetalleProducto5 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra_araña" element={<DetalleProducto6 />} />
-      <Route path="/Productos/detalle_producto_camisa_blanca_llamas" element={<DetalleProducto7 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra_clasica" element={<DetalleProducto8 />} />
-      <Route path="/Productos/detalle_producto_camisa_gris_AW_SPIKY_HEAD" element={<DetalleProducto9 />} />
-      <Route path="/Productos/detalle_producto_camisa_blanca-gris_xomoclothes" element={<DetalleProducto10 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra-blanco_blackstar" element={<DetalleProducto11 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra_eterning" element={<DetalleProducto12 />} />
-      <Route path="/Productos/detalle_producto_camisa_arena97" element={<DetalleProducto13 />} />
-      <Route path="/Productos/detalle_producto_camisa_gris-negra" element={<DetalleProducto14 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra_sidesteet" element={<DetalleProducto15 />} />
-      <Route path="/Productos/detalle_producto_camisa_negra_saint-tears" element={<DetalleProducto16 />} />
-      <Route path="/Productos/detalle_producto_pantalonM_anything" element={<DetalleProducto17 />} />
-      <Route path="/Productos/detalle_producto_pantalonM_Cargo_Morado" element={<DetalleProducto18 />} />
-      <Route path="/Productos/detalle_producto_pantalonetaM_Cargo" element={<DetalleProducto19 />} />
-      <Route path="/Productos/detalle_producto_pantalonM_Desteñido_llamas-Moradas" element={<DetalleProducto20 />} />
-      <Route path="/Productos/dealle_producto_destacado_chaqueta_azul" element={<DetalleProducto21 />} />
-      <Route path="/Productos/detalle_producto_destacado_camiseta_azul" element={<DetalleProducto22 />} />
-      <Route path="/Productos/detalle_producto_destacado_chaqueta_negra" element={<DetalleProducto23 />} />
+      {/* Ruta dinámica para todos los productos */}
+      <Route path="/productos/:id" element={<DetalleProducto />} />
        {/* contraseña restablecer */}
       <Route path="/ForgotPassword" element={<ForgotPassword/>} />
       <Route path="/ResetPasswordPage/:token" element={<ResetPasswordPage />} />
       {/* compra */} 
       <Route path="/Confirmación" element={<Confirmacion/>} />
+
+      <Route path="/Administradores/Adminstock" element={<AdminStock/>} />
+
+      <Route path="/historial-compras" element={<HistorialCompras />} />
+
+      <Route path="/pedido" element={<Pedido />} />
+      
 
 
     </Routes>

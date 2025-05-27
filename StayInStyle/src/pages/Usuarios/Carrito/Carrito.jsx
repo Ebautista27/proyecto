@@ -1,129 +1,203 @@
-import React, { useState, useEffect } from "react";
-import "./carrito.css";
+import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Para alertas bonitas (opcional)
+import Swal from 'sweetalert2';
+import { useCarrito } from "../../../context/CarritoContext";
+import "./carrito.css";
 
 const Carrito = () => {
-  const [carrito, setCarrito] = useState([]);
-  const [showLoginMessage, setShowLoginMessage] = useState(false);
   const navigate = useNavigate();
+  const { 
+    carrito, 
+    loading, 
+    error,
+    eliminarProducto,
+    actualizarCantidad,
+    obtenerCarrito,
+    vaciarCarrito
+  } = useCarrito();
 
   useEffect(() => {
-    const carritoGuardado = JSON.parse(localStorage.getItem("carrito")) || [];
-    setCarrito(carritoGuardado);
-  }, []);
+    obtenerCarrito();
+  }, [obtenerCarrito]);
 
-  const eliminarDelCarrito = (index) => {
-    const nuevoCarrito = carrito.filter((_, i) => i !== index);
-    setCarrito(nuevoCarrito);
-    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
+  const getImageUrl = (imagenUrl) => {
+    if (!imagenUrl) return "https://placehold.co/300x300?text=Imagen+no+disponible";
+    if (imagenUrl.startsWith('http')) return imagenUrl;
+    return `https://res.cloudinary.com/dodecmh9s/image/upload/w_300,h_300,c_fill/${imagenUrl}`;
   };
 
   const calcularTotal = () => {
-    return carrito.reduce((total, producto) => {
-      return total + (parseInt(producto.precio) * producto.cantidad);
-    }, 0);
+    if (!carrito?.productos || carrito.productos.length === 0) return 0;
+    return carrito.total || carrito.productos.reduce((total, producto) => total + producto.subtotal, 0);
   };
 
   const handleComprar = () => {
-    // Verificar si el token existe
-    const token = localStorage.getItem('token'); // O sessionStorage, según tu implementación
-    
-    if (!token) {
-      // Mostrar mensaje de que debe iniciar sesión
+    if (!localStorage.getItem("token")) {
       Swal.fire({
-        title: '¡Inicia sesión primero!',
-        text: 'Debes iniciar sesión para realizar compras',
+        title: 'Inicia sesión',
+        text: 'Debes iniciar sesión para continuar',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ir a Iniciar Sesión',
-        cancelButtonText: 'Seguir comprando',
-        customClass: {
-          popup: 'custom-swal-popup' // Clase CSS personalizada si necesitas
-        }
+        confirmButtonText: 'Ir a login',
+        cancelButtonText: 'Cancelar'
       }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/IniciarSesion');
-        }
+        if (result.isConfirmed) navigate('/login');
       });
-      
-      // Alternativa sin SweetAlert:
-      // setShowLoginMessage(true);
       return;
     }
-    
-    // Si hay token, redirigir a la página de compra
-    navigate('../Usuarios/Comprar');
+
+    if (!carrito?.productos?.length) {
+      Swal.fire('Carrito vacío', 'Agrega productos al carrito', 'warning');
+      return;
+    }
+
+    navigate('/Usuarios/Comprar');
   };
 
-  return (
-    <div style={{
-      backgroundColor: "#E5E1DA",
-      minHeight: "100vh",
-      padding: "20px 0"
-    }}>
+  const handleEliminar = async (productoId, id_talla) => {
+    const result = await Swal.fire({
+      title: '¿Eliminar producto?',
+      text: "Esta acción no se puede deshacer",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      await eliminarProducto(productoId, id_talla);
+      Swal.fire('Eliminado', 'Producto removido del carrito', 'success');
+    }
+  };
+
+  const handleVaciarCarrito = async () => {
+    const result = await Swal.fire({
+      title: '¿Vaciar carrito?',
+      text: "Se eliminarán todos los productos",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, vaciar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+      await vaciarCarrito();
+      Swal.fire('Carrito vacío', 'Todos los productos fueron eliminados', 'success');
+    }
+  };
+
+  if (loading) {
+    return (
       <div className="carrito-container">
-        <h1>Carrito de Compras</h1>
-        
-        {/* Mensaje de login (versión simple) */}
-        {showLoginMessage && (
-          <div className="login-message">
-            <p>Debes iniciar sesión para comprar</p>
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Cargando tu carrito...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="carrito-container">
+        <div className="error-container">
+          <p>{error}</p>
+          <button onClick={obtenerCarrito}>Reintentar</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="carrito-container">
+      <h1>Tu Carrito de Compras</h1>
+      
+      <div className="cart-content">
+        {!carrito?.productos?.length ? (
+          <div className="empty-cart">
+            <p>No hay productos en tu carrito</p>
             <button 
-              onClick={() => navigate('/IniciarSesion')}
-              className="login-btn"
+              onClick={() => navigate('/')}
+              className="btn-continue-shopping"
             >
-              Ir a Iniciar Sesión
+              Seguir comprando
             </button>
           </div>
-        )}
-
-        {carrito.length === 0 ? (
-          <p className="carrito-vacio">El carrito está vacío.</p>
         ) : (
           <>
-            <div className="carrito-items">
-              {carrito.map((producto, index) => (
-                <div key={index} className="producto-carrito">
-                  <div className="producto-contenido">
+            <div className="cart-items">
+              {carrito.productos.map((producto) => (
+                <div key={`${producto.id_producto}-${producto.id_talla}`} className="cart-item">
+                  <div className="item-image">
                     <img
-                      src={producto.imagen}
+                      src={getImageUrl(producto.imagen_url)}
                       alt={producto.nombre}
-                      className="producto-imagen22"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'https://via.placeholder.com/120';
+                        e.target.src = 'https://placehold.co/300x300?text=Imagen+no+disponible';
                       }}
                     />
-                    <div className="producto-detalle">
-                      <h2>{producto.nombre}</h2>
-                      <div className="producto-especificaciones">
-                        <p><strong>Precio:</strong> {producto.precio.toLocaleString()} pesos</p>
-                        <p><strong>Cantidad:</strong> {producto.cantidad}</p>
-                        <p><strong>Talla:</strong> {producto.talla}</p>
-                      </div>
-                    </div>
                   </div>
+                  
+                  <div className="item-details">
+                    <h3>{producto.nombre}</h3>
+                    <p>Talla: {producto.talla}</p>
+                    <p>Precio unitario: ${producto.precio_unitario.toLocaleString()}</p>
+                    <p>Stock disponible: {producto.stock_disponible}</p>
+                    
+                    <div className="quantity-control">
+                      <button
+                        onClick={() => actualizarCantidad(producto.id_producto, producto.id_talla, producto.cantidad - 1)}
+                        disabled={producto.cantidad <= 1}
+                      >
+                        -
+                      </button>
+                      <span>{producto.cantidad}</span>
+                      <button
+                        onClick={() => actualizarCantidad(producto.id_producto, producto.id_talla, producto.cantidad + 1)}
+                        disabled={!producto.puede_aumentar}
+                      >
+                        +
+                      </button>
+                    </div>
+                    
+                    <p>Subtotal: ${producto.subtotal.toLocaleString()}</p>
+                  </div>
+                  
                   <button
-                    onClick={() => eliminarDelCarrito(index)}
-                    className="eliminar-btn"
+                    onClick={() => handleEliminar(producto.id_producto, producto.id_talla)}
+                    className="btn-remove"
                   >
                     Eliminar
                   </button>
                 </div>
               ))}
             </div>
-
-            <div className="carrito-footer">
-              <div className="carrito-total">
-                <p><strong>Total:</strong> {calcularTotal().toLocaleString()} mil pesos</p>
+            
+            <div className="cart-summary">
+              <div className="cart-total">
+                <h3>Total: ${calcularTotal().toLocaleString()}</h3>
               </div>
-              <button
-                id="comprar-btn"
-                onClick={handleComprar}
-              >
-                Comprar
-              </button>
+              
+              <div className="cart-actions">
+                <button 
+                  onClick={handleVaciarCarrito}
+                  className="btn-clear-cart"
+                >
+                  Vaciar Carrito
+                </button>
+                
+                <button
+                  onClick={handleComprar}
+                  className="btn-checkout"
+                >
+                  Proceder al Pago
+                </button>
+              </div>
             </div>
           </>
         )}

@@ -123,3 +123,46 @@ nav ul li ul li a {
 .cerrar-sesion-btn:hover {
   color: red;
 }
+
+
+/* Mostrar el nombre del usuario logueado */
+.nombre-usuario {
+  color: white;
+  font-size: 20px;
+  padding: 10px 15px;
+  font-weight: bold;
+}
+
+/* Ajuste para botón de cerrar sesión */
+.cerrar-sesion-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+}
+
+.cerrar-sesion-btn:hover {
+  color: red;
+}
+
+.auth-message.success {
+  color: green;
+  background-color: #e6ffe6;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.auth-message.error {
+  color: red;
+  background-color: #ffebeb;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}

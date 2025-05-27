@@ -4,7 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import Administrador from "../pages/Administrador/Administrador"; // Página principal del menú admin
 import AdminUsuarios from "../pages/Administradores/adminUsuarios/adminUsuarios"; // Gestión de usuarios
 import AdminProductos from "../pages/Administradores/adminproductos/adminproductos"; // Gestión de productos
-import AdminPedidos from "../pages/Administradores/adminpedidos/adminpedidos"; // Gestión de pedidos
+import AdminStock from "../pages/Administradores/AdminStock/Adminstock";
+
 
 const AdminRoutes = () => {
   return (
@@ -20,6 +21,9 @@ const AdminRoutes = () => {
 
       {/* Ruta para la gestión de pedidos */}
       <Route path="/adminpedidos" element={<AdminPedidos />} />
+
+       {/* Ruta simple para AdminStock */}
+      <Route path="/admin/stock" element={<AdminStock />} />
     </Routes>
   );
 };
