@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import "./adminReseñas.css";
 import { useNavigate } from "react-router-dom";
+import "./adminReseñas.css";
 
 const AdminReseñas = () => {
     const [reseñas, setReseñas] = useState([]);
@@ -12,33 +12,51 @@ const AdminReseñas = () => {
         comentario: "",
         calificacion: 5,
         id_producto: "",
-        id_usuario: "" // Agregado para seleccionar el usuario
+        id_usuario: ""
     });
     const [editData, setEditData] = useState(null);
     const [mensaje, setMensaje] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     useEffect(() => {
-        AOS.init();
-        fetchReseñas();
-        fetchProductos();
-        fetchUsuarios(); // Ahora también se obtienen los usuarios
-    }, []);
+        AOS.init({ duration: 1000 });
+        
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+        
+        const fetchData = async () => {
+            try {
+                await Promise.all([fetchReseñas(), fetchProductos(), fetchUsuarios()]);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setError("Error al cargar los datos");
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
+    }, [navigate, token]);
 
     const fetchReseñas = async () => {
         try {
             const response = await fetch("http://127.0.0.1:5000/reseñas", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const data = await response.json();
-            if (response.ok) {
-                setReseñas(data);
-            } else {
-                setMensaje(data.mensaje || "Error al cargar las reseñas.");
+            
+            if (!response.ok) {
+                throw new Error("Error al cargar reseñas");
             }
+            
+            const data = await response.json();
+            setReseñas(Array.isArray(data) ? data : []);
         } catch (error) {
-            setMensaje("Error al cargar las reseñas.");
+            setError(error.message);
         }
     };
 
@@ -47,12 +65,15 @@ const AdminReseñas = () => {
             const response = await fetch("http://127.0.0.1:5000/productos", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const data = await response.json();
-            if (response.ok) {
-                setProductos(data);
+            
+            if (!response.ok) {
+                throw new Error("Error al cargar productos");
             }
+            
+            const data = await response.json();
+            setProductos(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error al cargar productos:", error);
+            setError(error.message);
         }
     };
 
@@ -61,12 +82,18 @@ const AdminReseñas = () => {
             const response = await fetch("http://127.0.0.1:5000/usuarios", {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const data = await response.json();
-            if (response.ok) {
-                setUsuarios(data);
+            
+            if (!response.ok) {
+                throw new Error("Error al cargar usuarios");
             }
+            
+            const data = await response.json();
+            // Asegurarse de que data.usuarios existe y es un array
+            const usuariosData = Array.isArray(data.usuarios) ? data.usuarios : 
+                               Array.isArray(data) ? data : [];
+            setUsuarios(usuariosData);
         } catch (error) {
-            console.error("Error al cargar usuarios:", error);
+            setError(error.message);
         }
     };
 
@@ -87,11 +114,9 @@ const AdminReseñas = () => {
             let url, method;
             
             if (editData) {
-                // Edición de reseña existente
                 url = `http://127.0.0.1:5000/reseñas/${editData.id}`;
                 method = "PUT";
             } else {
-                // Creación de nueva reseña
                 url = `http://127.0.0.1:5000/productos/${formData.id_producto}/crear-reseña`;
                 method = "POST";
             }
@@ -105,23 +130,24 @@ const AdminReseñas = () => {
                 body: JSON.stringify({
                     comentario: formData.comentario,
                     calificacion: formData.calificacion,
-                    id_usuario: formData.id_usuario // Incluyendo el usuario seleccionado
+                    id_usuario: formData.id_usuario
                 }),
             });
 
+            const data = await response.json();
+            
             if (response.ok) {
                 setMensaje(editData ? "Reseña actualizada ✅" : "Reseña creada ✅");
-                fetchReseñas();
+                await fetchReseñas();
                 setFormData({ 
                     comentario: "", 
                     calificacion: 5, 
                     id_producto: "",
-                    id_usuario: "" // Limpiar el usuario seleccionado
+                    id_usuario: ""
                 });
                 setEditData(null);
             } else {
-                const errorData = await response.json();
-                setMensaje(errorData.mensaje || "Error al guardar la reseña ❌");
+                setMensaje(data.mensaje || "Error al guardar la reseña ❌");
             }
         } catch (error) {
             setMensaje("Error de conexión al servidor ❌");
@@ -134,7 +160,7 @@ const AdminReseñas = () => {
             comentario: reseña.comentario,
             calificacion: reseña.calificacion,
             id_producto: reseña.id_producto,
-            id_usuario: reseña.id_usuario // Cargar usuario en edición
+            id_usuario: reseña.id_usuario
         });
     };
 
@@ -149,7 +175,7 @@ const AdminReseñas = () => {
 
             if (response.ok) {
                 setMensaje("Reseña eliminada ✅");
-                fetchReseñas();
+                await fetchReseñas();
             } else {
                 const errorData = await response.json();
                 setMensaje(errorData.mensaje || "Error al eliminar la reseña ❌");
@@ -159,17 +185,25 @@ const AdminReseñas = () => {
         }
     };
 
+    if (loading) {
+        return <div className="loading">Cargando...</div>;
+    }
+
+    if (error) {
+        return <div className="error">{error}</div>;
+    }
+
     return (
-        <div style={{ backgroundColor: "#E5E1DA", minHeight: "100vh", padding: "20px" }}>
+        <div className="admin-reseñas-container">
             <div className="container">
-                <h1 data-aos="fade-down" data-aos-duration="1000">Gestión de Reseñas</h1>
+                <h1 data-aos="fade-down">Gestión de Reseñas</h1>
                 {mensaje && (
                     <div className={`alert ${mensaje.includes("✅") ? "alert-success" : "alert-error"}`}>
                         {mensaje}
                     </div>
                 )}
 
-                <div className="form-container" data-aos="fade-up" data-aos-duration="1500">
+                <div className="form-container" data-aos="fade-up">
                     <h2>{editData ? "Editar Reseña" : "Crear Reseña"}</h2>
                     <form onSubmit={handleSubmit}>
                         <textarea
@@ -194,7 +228,6 @@ const AdminReseñas = () => {
                             />
                         </div>
                         
-                        {/* Selección de Producto */}
                         <div className="form-group">
                             <label>Producto:</label>
                             <select
@@ -205,7 +238,7 @@ const AdminReseñas = () => {
                                 disabled={!!editData}
                             >
                                 <option value="">Seleccione un producto</option>
-                                {productos.map(producto => (
+                                {Array.isArray(productos) && productos.map(producto => (
                                     <option key={producto.id} value={producto.id}>
                                         {producto.nombre}
                                     </option>
@@ -213,7 +246,6 @@ const AdminReseñas = () => {
                             </select>
                         </div>
 
-                        {/* Selección de Usuario */}
                         <div className="form-group">
                             <label>Usuario:</label>
                             <select
@@ -223,7 +255,7 @@ const AdminReseñas = () => {
                                 required
                             >
                                 <option value="">Seleccione un usuario</option>
-                                {usuarios.map(usuario => (
+                                {Array.isArray(usuarios) && usuarios.map(usuario => (
                                     <option key={usuario.id} value={usuario.id}>
                                         {usuario.nombre}
                                     </option>
@@ -244,7 +276,7 @@ const AdminReseñas = () => {
                                         comentario: "", 
                                         calificacion: 5, 
                                         id_producto: "",
-                                        id_usuario: "" // Limpiar el usuario seleccionado
+                                        id_usuario: ""
                                     });
                                 }}
                             >
@@ -254,44 +286,47 @@ const AdminReseñas = () => {
                     </form>
                 </div>
 
-                {/* Tabla de Reseñas */}
-                <div className="table-container" data-aos="fade-up" data-aos-duration="1500">
+                <div className="table-container" data-aos="fade-up">
                     <h2>Lista de Reseñas</h2>
-                    <table className="table-style">
-                        <thead>
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Producto</th>
-                                <th>Comentario</th>
-                                <th>Calificación</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {reseñas.map((reseña) => (
-                                <tr key={reseña.id}>
-                                    <td>{reseña.usuario?.nombre || "Usuario desconocido"}</td>
-                                    <td>{reseña.producto?.nombre || "Producto desconocido"}</td>
-                                    <td>{reseña.comentario}</td>
-                                    <td>{reseña.calificacion}</td>
-                                    <td>
-                                        <button 
-                                            onClick={() => handleEdit(reseña)}
-                                            className="btn-edit"
-                                        >
-                                            Editar
-                                        </button>
-                                        <button 
-                                            onClick={() => handleDelete(reseña.id)}
-                                            className="btn-delete"
-                                        >
-                                            Eliminar
-                                        </button>
-                                    </td>
+                    {reseñas.length === 0 ? (
+                        <p>No hay reseñas disponibles</p>
+                    ) : (
+                        <table className="table-style">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Producto</th>
+                                    <th>Comentario</th>
+                                    <th>Calificación</th>
+                                    <th>Acciones</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {reseñas.map((reseña) => (
+                                    <tr key={reseña.id}>
+                                        <td>{reseña.usuario?.nombre || "Usuario desconocido"}</td>
+                                        <td>{reseña.producto?.nombre || "Producto desconocido"}</td>
+                                        <td>{reseña.comentario}</td>
+                                        <td>{reseña.calificacion}</td>
+                                        <td>
+                                            <button 
+                                                onClick={() => handleEdit(reseña)}
+                                                className="btn-edit"
+                                            >
+                                                Editar
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDelete(reseña.id)}
+                                                className="btn-delete"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </div>
