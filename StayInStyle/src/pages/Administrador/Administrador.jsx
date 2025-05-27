@@ -115,6 +115,9 @@ const Administrador = () => {
             <Link to="/Administradores/adminreseñas">
               <button className="btn">Gestión de Reseñas</button>
             </Link>
+            <Link to="/Administradores/AdminStock">
+              <button className="btn">Gestión de Stock</button>
+            </Link>
           </div>
         </div>
       </div>
