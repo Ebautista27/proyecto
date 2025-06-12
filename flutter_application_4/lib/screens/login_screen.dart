@@ -1,157 +1,154 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../routes/app_routes.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _showPassword = false;
-  String _mensaje = '';
-  bool _isLoading = false;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool isLoading = false;
+  bool showPassword = false;
+  String mensaje = "";
 
-  Future<void> _iniciarSesion() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      setState(() => _mensaje = 'Email y contraseña son obligatorios');
+  Future<void> handleLogin() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => mensaje = "Por favor completa todos los campos");
       return;
     }
 
     setState(() {
-      _isLoading = true;
-      _mensaje = '';
+      isLoading = true;
+      mensaje = "";
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000/login'),
+      final res = await http.post(
+        Uri.parse("http://localhost:5000/login"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'email': _emailController.text,
-          'password': _passwordController.text,
+          'email': email,
+          'password': password,
         }),
       );
 
-      final responseData = json.decode(response.body);
+      final data = json.decode(res.body);
 
-      if (response.statusCode == 200) {
+      if (res.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', responseData['token']);
+        final token = data['token'];
+        final usuario = data['usuario'];
 
-        // Redirección directa basada en el email (para super admin)
-        if (_emailController.text == 'superadmin@example.com') {
-          Navigator.pushReplacementNamed(context, AppRoutes.admin);
-        } else {
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        await prefs.setString("token", token);
+        await prefs.setInt("id_usuario", usuario['id']);
+        await prefs.setString("nombre_usuario", usuario['nombre']);
+        await prefs.setString("email_usuario", usuario['email']);
+        await prefs.setString("direccion_usuario", usuario['direccion'] ?? "");
+        await prefs.setInt("userRole", usuario['id_rol']);
+
+        // Superadmin por correo + clave exacta
+        if (email == "superadmin@example.com" && password == "superadmin123") {
+          await prefs.setBool("isSuperAdmin", true);
+          setState(() => mensaje = "Inicio de sesión exitoso como SuperAdmin");
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushReplacementNamed(context, "/admin");
+          });
+        }
+        // Admin
+        else if (usuario['id_rol'] == 1) {
+          setState(() => mensaje = "Inicio de sesión exitoso como administrador");
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushReplacementNamed(context, "/admin");
+          });
+        }
+        // Cliente normal
+        else {
+          setState(() => mensaje = "Inicio de sesión exitoso");
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushReplacementNamed(context, "/home");
+          });
         }
       } else {
-        setState(
-          () =>
-              _mensaje = responseData['mensaje'] ?? 'Credenciales incorrectas',
-        );
+        setState(() {
+          mensaje = data['mensaje'] ?? "Error al iniciar sesión. Verifica tus credenciales.";
+        });
       }
-    } catch (error) {
-      setState(() => _mensaje = 'Error de conexión: ${error.toString()}');
+    } catch (e) {
+      setState(() {
+        mensaje = "Error de conexión al servidor";
+      });
     } finally {
-      setState(() => _isLoading = false);
+      setState(() => isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE5E1DA),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Inicia Sesión',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Correo',
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-                prefixIcon: Icon(Icons.email),
+      backgroundColor: const Color(0xffE5E5E5),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Inicia Sesión", style: TextStyle(fontSize: 24)),
+              const SizedBox(height: 20),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: "Correo Electrónico"),
               ),
-            ),
-            SizedBox(height: 15),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: !_showPassword,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-                prefixIcon: Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _showPassword ? Icons.visibility : Icons.visibility_off,
+              const SizedBox(height: 10),
+              TextField(
+                controller: passwordController,
+                obscureText: !showPassword,
+                decoration: InputDecoration(
+                  labelText: "Contraseña",
+                  suffixIcon: IconButton(
+                    icon: Icon(showPassword ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () => setState(() => showPassword = !showPassword),
                   ),
-                  onPressed:
-                      () => setState(() => _showPassword = !_showPassword),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: isLoading ? null : handleLogin,
+                child: isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("Iniciar Sesión"),
               ),
-              onPressed: _isLoading ? null : _iniciarSesion,
-              child:
-                  _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text('Iniciar Sesión'),
-            ),
-
-            if (_mensaje.isNotEmpty) ...[
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text(
-                  _mensaje,
+              const SizedBox(height: 10),
+              if (mensaje.isNotEmpty)
+                Text(
+                  mensaje,
                   style: TextStyle(
-                    color:
-                        _mensaje.contains('Error') ? Colors.red : Colors.green,
+                    color: mensaje.contains("exitoso") ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, "/forgot-password"),
+                child: const Text("¿Olvidaste tu contraseña?"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, "/registro"),
+                child: const Text("¿No tienes cuenta? Regístrate"),
               ),
             ],
-
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.registro),
-              child: Text('¿No tienes cuenta? Regístrate'),
-            ),
-
-            SizedBox(height: 20),
-
-            IconButton(
-              icon: Icon(Icons.home, size: 40, color: Colors.black87),
-              onPressed:
-                  () => Navigator.pushReplacementNamed(context, AppRoutes.home),
-            ),
-          ],
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

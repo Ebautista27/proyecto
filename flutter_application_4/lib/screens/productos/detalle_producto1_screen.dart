@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
 class DetalleProducto1Screen extends StatefulWidget {
   final String id;
   final String nombre;
-  final String precio ;
+  final String precio;
   final String descripcion;
 
   const DetalleProducto1Screen({
@@ -42,6 +45,63 @@ class _DetalleProducto1ScreenState extends State<DetalleProducto1Screen> {
       'fecha': '22/04/2023',
     },
   ];
+
+  Future<void> _anadirAlCarrito() async {
+    if (_tallaSeleccionada.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Selecciona una talla'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    List<dynamic> carrito = [];
+
+    // Obtener carrito existente
+    final carritoGuardado = prefs.getString('carrito');
+    if (carritoGuardado != null) {
+      carrito = json.decode(carritoGuardado);
+    }
+
+    // Crear nuevo item
+    final nuevoItem = {
+      'id': widget.id,
+      'nombre': widget.nombre,
+      'precio': widget.precio,
+      'imagen': 'assets/imagenes/chaqueta_cargo_610.jpg',
+      'cantidad': _cantidad,
+      'talla': _tallaSeleccionada,
+    };
+
+    // Verificar si ya existe en el carrito
+    bool existe = false;
+    for (var item in carrito) {
+      if (item['id'] == widget.id && item['talla'] == _tallaSeleccionada) {
+        item['cantidad'] += _cantidad;
+        existe = true;
+        break;
+      }
+    }
+
+    if (!existe) {
+      carrito.add(nuevoItem);
+    }
+
+    // Guardar en SharedPreferences
+    await prefs.setString('carrito', json.encode(carrito));
+
+    // Mostrar notificación
+    Fluttertoast.showToast(
+      msg: "¡Producto añadido al carrito!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
+  }
 
   double _calcularPromedio() {
     if (_resenas.isEmpty) return 0;
@@ -86,7 +146,7 @@ class _DetalleProducto1ScreenState extends State<DetalleProducto1Screen> {
                         Hero(
                           tag: 'producto-${widget.id}',
                           child: Image.asset(
-                            'assets/imagenes/chaqueta_cargo_610.jpg', // Ruta específica de la imagen
+                            'assets/imagenes/chaqueta_cargo_610.jpg',
                             height: 400,
                             fit: BoxFit.contain,
                           ),
@@ -220,18 +280,7 @@ class _DetalleProducto1ScreenState extends State<DetalleProducto1Screen> {
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                          onPressed: () {
-                            if (_tallaSeleccionada.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Selecciona una talla'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              return;
-                            }
-                            // Lógica para añadir al carrito
-                          },
+                          onPressed: _anadirAlCarrito,
                           child: const Text(
                             'AÑADIR A LA CESTA',
                             style: TextStyle(

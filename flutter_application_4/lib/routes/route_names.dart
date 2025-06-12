@@ -9,5 +9,5 @@ class RouteNames {
   static const String adminProductos = AppRoutes.adminProductos;
   static const String adminCompras = AppRoutes.adminPedidos;
   static const String adminResenas = AppRoutes.adminResenas;
-  static const String detalleProducto1 = AppRoutes.detalleProducto1;
+  static const String detalleProducto = AppRoutes.detalleProducto;
 }

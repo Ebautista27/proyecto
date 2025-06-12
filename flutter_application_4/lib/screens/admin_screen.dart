@@ -1,254 +1,120 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'; // Para kIsWeb
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import '../routes/app_routes.dart';
 
-class AdministradorScreen extends StatefulWidget {
+class AdminScreen extends StatefulWidget {
+  const AdminScreen({super.key});
+
   @override
-  _AdministradorScreenState createState() => _AdministradorScreenState();
+  State<AdminScreen> createState() => _AdminScreenState();
 }
 
-class _AdministradorScreenState extends State<AdministradorScreen> {
-  String nombre = "Administrador";
-  String email = "";
-  String mensaje = "";
-  File? _image;
-  bool _isLoading = true;
-  String? _imagePath; // Para manejar la ruta en web
+class _AdminScreenState extends State<AdminScreen> {
+  String nombre = '';
+  String email = '';
+  String? foto;
+  String mensaje = '';
 
   @override
   void initState() {
     super.initState();
-    verificarAdmin();
+    verificarSuperAdmin();
   }
 
-  Future<void> verificarAdmin() async {
-    if (!mounted) return;
-    
-    setState(() => _isLoading = true);
-    
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+  Future<void> verificarSuperAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
 
     if (token == null) {
-      if (mounted) {
-        setState(() {
-          mensaje = "No tienes acceso. Inicia sesión.";
-          _isLoading = false;
-        });
-      }
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      setState(() => mensaje = "No tienes acceso. Inicia sesión.");
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    final payload = json.decode(
+        utf8.decode(base64Url.decode(base64Url.normalize(token.split('.')[1]))));
+
+    if (payload["email"] != "superadmin@example.com") {
+      Navigator.pushReplacementNamed(context, '/');
       return;
     }
 
     try {
-      final response = await http.get(
-        Uri.parse("http://127.0.0.1:5000/superadmin"),
-        headers: {"Authorization": "Bearer $token"},
+      final res = await http.get(
+        Uri.parse('http://localhost:5000/superadmin'),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (mounted) {
-          setState(() {
-            nombre = data["nombre"] ?? "Administrador";
-            email = data["email"] ?? "";
-            mensaje = "";
-            _isLoading = false;
-          });
-        }
+      if (res.statusCode == 200) {
+        final data = json.decode(res.body);
+        setState(() {
+          nombre = data['nombre'];
+          email = data['email'];
+          foto = data['foto'];
+        });
       } else {
-        if (mounted) {
-          setState(() {
-            mensaje = "Error al cargar datos";
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          mensaje = "";
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> cerrarSesion() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    Navigator.pushReplacementNamed(context, AppRoutes.login);
-  }
-
-  Future<void> seleccionarImagen() async {
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      
-      if (image != null && mounted) {
-        setState(() {
-          _image = File(image.path);
-          _imagePath = image.path; // Guardamos la ruta para web
-        });
+        setState(() => mensaje = "Error al cargar los datos del administrador.");
       }
     } catch (e) {
-      if (mounted) {
-        setState(() => mensaje = "Error al seleccionar imagen");
-      }
+      setState(() => mensaje = "Error inesperado: $e");
     }
   }
 
-  ImageProvider? _getImageProvider() {
-    if (_image == null) return null;
-    
-    if (kIsWeb) {
-      // Para web usamos NetworkImage con la ruta directa
-      return NetworkImage(_imagePath!);
-    } else {
-      // Para móvil/desktop usamos FileImage
-      return FileImage(_image!);
-    }
+  void navegarA(String ruta) {
+    Navigator.pushNamed(context, ruta);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE5E1DA),
       appBar: AppBar(
-        title: Text("Panel de Administrador"),
-        backgroundColor: Color(0xFFE5E1DA),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app, color: Colors.black),
-            onPressed: cerrarSesion,
-          ),
-        ],
+        title: const Text("Panel de Administrador"),
+        backgroundColor: Colors.blueGrey,
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            if (mensaje.isNotEmpty) Text(mensaje, style: const TextStyle(color: Colors.red)),
+
+            CircleAvatar(
+              radius: 60,
+              backgroundImage: foto != null ? NetworkImage(foto!) : null,
+              child: foto == null ? const Icon(Icons.person, size: 60) : null,
+            ),
+            const SizedBox(height: 10),
+            Text("Bienvenido, $nombre", style: const TextStyle(fontSize: 20)),
+            Text(email, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+            const SizedBox(height: 20),
+
+            Expanded(
+              child: ListView(
                 children: [
-                  // Imagen del administrador
-                  Center(
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey[200],
-                          backgroundImage: _getImageProvider(),
-                          child: _image == null 
-                              ? Icon(Icons.person, size: 50, color: Colors.grey)
-                              : null,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt, color: Colors.white, size: 20),
-                              onPressed: seleccionarImagen,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  // Información del Administrador
-                  Text(
-                    "Bienvenido, $nombre",
-                    style: TextStyle(
-                      fontSize: 20, 
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  if (email.isNotEmpty)
-                    Text(
-                      email,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16,
-                      ),
-                    ),
-                  SizedBox(height: 20),
-
-                  // Botones de gestión
-                  Expanded(
-                    child: ListView(
-                      physics: BouncingScrollPhysics(),
-                      children: [
-                        _buildMenuButton(
-                          "Gestión de Usuarios", 
-                          Icons.people, 
-                          AppRoutes.adminUsuarios
-                        ),
-                        _buildMenuButton(
-                          "Gestión de Productos", 
-                          Icons.shopping_bag, 
-                          AppRoutes.adminProductos
-                        ),
-                        _buildMenuButton(
-                          "Gestión de Compras", 
-                          Icons.shopping_cart, 
-                          AppRoutes.adminPedidos
-                        ),
-                        _buildMenuButton(
-                          "Gestión de Reseñas", 
-                          Icons.star, 
-                          AppRoutes.adminResenas
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Footer
-                  Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text(
-                      "© ${DateTime.now().year} Stay in Style",
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
+                  botonGestion("Gestión de Usuarios", '/admin/usuarios'),
+                  botonGestion("Gestión de Productos", '/admin/productos'),
+                  botonGestion("Gestión de Pedidos", '/admin/pedidos'),
+                  botonGestion("Gestión de Reseñas", '/admin/resenas'),
+                  botonGestion("Gestión de Stock", '/admin/stock'),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildMenuButton(String title, IconData icon, String route) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.blue),
-        title: Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+  Widget botonGestion(String titulo, String ruta) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: ElevatedButton(
+        onPressed: () => navegarA(ruta),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          backgroundColor: const Color(0xFFB17457),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () => Navigator.pushNamed(context, route),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Text(titulo, style: const TextStyle(fontSize: 18)),
       ),
     );
   }
